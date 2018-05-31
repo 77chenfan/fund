@@ -1,6 +1,7 @@
 #/bin/bash
 
-codelist=(020026 020019)
+#codelist=(020026 020019)
+codelist=(420003)
 
 function getTime(){
 timestamp=$[$(date +%s%N)/1000000]
@@ -17,13 +18,17 @@ function getOnePageData(){
 }
 
 function formatJsonFile(){
-	files=`ls *.json`
+	code=$1
+	files=`ls ${code}*.json`
 	f=`echo $files|cut -d " " -f 1`
 	echo $f
 	rep1=`grep -i "^.*(" $f -o`
 	rep2=")"
-	sed -i 's/'${rep1}'//g' *.json
-	sed -i "s/)//g" *.json
+	echo $rep1
+	echo ${code}*.json
+	sed -i 's/'${rep1}'//g' ${code}*.json
+	sed -i "s/)//g" ${code}*.json
+	chmod  777 *.json
 }
 
 function start(){
@@ -35,6 +40,7 @@ function start(){
 			getOnePageData $code $i
 			sleep 1
 		done
+		formatJsonFile $code
 	done
-	formatJsonFile
+	
 }
